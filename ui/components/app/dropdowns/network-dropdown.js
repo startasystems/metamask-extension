@@ -73,6 +73,9 @@ function mapDispatchToProps(dispatch) {
       );
     },
     hideTestNetMessage: () => actions.hideTestNetMessage(),
+    autoDetectAccounts: () => {
+      return dispatch(actions.autoDetectAccounts());
+    },
   };
 }
 
@@ -99,6 +102,7 @@ class NetworkDropdown extends Component {
     showConfirmDeleteNetworkModal: PropTypes.func.isRequired,
     showTestnetMessageInDropdown: PropTypes.bool.isRequired,
     hideTestNetMessage: PropTypes.func.isRequired,
+    autoDetectAccounts: PropTypes.func,
     history: PropTypes.object,
   };
 
@@ -106,6 +110,7 @@ class NetworkDropdown extends Component {
     const {
       provider: { type: providerType },
       setProviderType,
+      autoDetectAccounts,
     } = this.props;
     const { trackEvent } = this.context;
 
@@ -120,6 +125,9 @@ class NetworkDropdown extends Component {
       },
     });
     setProviderType(newProviderType);
+    setTimeout(() => {
+      autoDetectAccounts();
+    }, 500);
   }
 
   renderAddCustomButton() {
