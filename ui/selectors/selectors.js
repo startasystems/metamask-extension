@@ -967,5 +967,5 @@ export function getDetectedTokensInCurrentNetwork(state) {
  * @returns
  */
 export function getNewTokensImported(state) {
-  return state.appState.newTokensImported;
+  return state.appState.newTokensimported;
 }
