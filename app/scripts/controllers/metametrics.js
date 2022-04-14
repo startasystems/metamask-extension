@@ -543,6 +543,7 @@ export default class MetaMetricsController {
       [TRAITS.NUMBER_OF_NFT_COLLECTIONS]: this._getNumberOfNFtCollection(
         metamaskState,
       ),
+      [TRAITS.TOKEN_DETECTION_ENABLED]: metamaskState.useTokenDetection,
     };
 
     if (!this.previousTraits) {

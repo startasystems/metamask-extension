@@ -646,6 +646,7 @@ describe('MetaMetricsController', function () {
           },
         },
         threeBoxSyncingAllowed: false,
+        useTokenDetection: true,
       });
 
       assert.deepEqual(traits, {
@@ -654,6 +655,7 @@ describe('MetaMetricsController', function () {
         [TRAITS.NUMBER_OF_ACCOUNTS]: 2,
         [TRAITS.NUMBER_OF_NFT_COLLECTIONS]: 3,
         [TRAITS.THREE_BOX_ENABLED]: false,
+        [TRAITS.TOKEN_DETECTION_ENABLED]: true,
       });
     });
 
@@ -667,6 +669,7 @@ describe('MetaMetricsController', function () {
         ledgerTransportType: 'web-hid',
         identities: [{}, {}],
         threeBoxSyncingAllowed: false,
+        useTokenDetection: true,
       });
 
       const updatedTraits = metaMetricsController._buildUserTraitsObject({
@@ -677,6 +680,7 @@ describe('MetaMetricsController', function () {
         ledgerTransportType: 'web-hid',
         identities: [{}, {}, {}],
         threeBoxSyncingAllowed: false,
+        useTokenDetection: true,
       });
 
       assert.deepEqual(updatedTraits, {
@@ -694,6 +698,7 @@ describe('MetaMetricsController', function () {
         ledgerTransportType: 'web-hid',
         identities: [{}, {}],
         threeBoxSyncingAllowed: false,
+        useTokenDetection: true,
       });
 
       const updatedTraits = metaMetricsController._buildUserTraitsObject({
@@ -704,6 +709,7 @@ describe('MetaMetricsController', function () {
         ledgerTransportType: 'web-hid',
         identities: [{}, {}],
         threeBoxSyncingAllowed: false,
+        useTokenDetection: true,
       });
 
       assert.equal(updatedTraits, null);

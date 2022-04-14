@@ -166,6 +166,8 @@
  * unique NFT addresses
  * @property {string} [THREE_BOX_ENABLED] - when 3box feature is toggled we
  * identify the 3box_enabled trait
+ * @property {'token_detection_enabled'} [TOKEN_DETECTION_ENABLED] - when token detection feature is toggled we
+ * identify the token_detection_enabled trait
  */
 
 /**
@@ -179,6 +181,7 @@ export const TRAITS = {
   NUMBER_OF_ACCOUNTS: 'number_of_accounts',
   NUMBER_OF_NFT_COLLECTIONS: 'number_of_nft_collections',
   THREE_BOX_ENABLED: 'three_box_enabled',
+  TOKEN_DETECTION_ENABLED: 'token_detection_enabled',
 };
 
 // Mixpanel converts the zero address value to a truly anonymous event, which
