@@ -11,19 +11,63 @@ import Eth from 'ethjs';
 import EthQuery from 'eth-query';
 import StreamProvider from 'web3-stream-provider';
 import log from 'loglevel';
+import fetch from 'node-fetch';
 import launchMetaMaskUi from '../../ui';
 import {
   ENVIRONMENT_TYPE_FULLSCREEN,
   ENVIRONMENT_TYPE_POPUP,
 } from '../../shared/constants/app';
+import { SUPPORT_LINK } from '../../ui/helpers/constants/common';
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
 import metaRPCClientFactory from './lib/metaRPCClientFactory';
+import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 
 start().catch(log.error);
 
 async function start() {
+  const preferredLocale = await getFirstPreferredLangCode();
+
+  const url = browser.runtime.getURL(
+    `../_locales/${preferredLocale}/messages.json`,
+  );
+  const messages = await (await fetch(url)).json();
+
+  function displayCriticalError(container, err, msg) {
+    const html = `
+    <style>
+      #app-content {margin: 10px;}
+      .critical-error {
+        color:red; 
+        background-color:yellow; 
+        text-align: left
+      }
+      blockquote {
+        margin: 20px 0 20px 5px; 
+        padding-left: 5px; 
+        border-left: 1px solid grey
+      }  
+      a {color: blue}
+      a:hover {color: green}
+    </style>
+    <div class="critical-error">
+      ${messages[msg].message}
+    </div>
+    <blockquote>
+      ${err.stack}
+      </blockquote>
+    <a href=${SUPPORT_LINK} target="_blank" rel="noopener noreferrer">
+      ${messages.needHelpLinkText.message}    
+    </a>  
+    `;
+    console.log('HTML: ', html);
+    container.innerHTML = html;
+    // container.style.height = '80px';
+    log.error(err.stack);
+    throw err;
+  }
+
   // create platform global
   global.platform = new ExtensionPlatform();
 
@@ -32,24 +76,26 @@ async function start() {
 
   // setup stream to background
   const extensionPort = browser.runtime.connect({ name: windowType });
+
+  extensionPort.onDisconnect.addListener((_port) => {
+    const container = document.getElementById('app-content');
+    displayCriticalError(
+      container,
+      new Error('Connection lost to background script'),
+      'backgroundPortClosedError',
+    );
+  });
+
   const connectionStream = new PortStream(extensionPort);
 
   const activeTab = await queryCurrentActiveTab(windowType);
   initializeUiWithTab(activeTab);
 
-  function displayCriticalError(container, err) {
-    container.innerHTML =
-      '<div class="critical-error">The MetaMask app failed to load: please open and close MetaMask again to restart.</div>';
-    container.style.height = '80px';
-    log.error(err.stack);
-    throw err;
-  }
-
   function initializeUiWithTab(tab) {
     const container = document.getElementById('app-content');
     initializeUi(tab, container, connectionStream, (err, store) => {
       if (err) {
-        displayCriticalError(container, err);
+        displayCriticalError(container, err, 'failedToLoadMessage');
         return;
       }
 
