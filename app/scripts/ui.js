@@ -61,7 +61,6 @@ async function start() {
       ${messages.needHelpLinkText.message}    
     </a>  
     `;
-    console.log('HTML: ', html);
     container.innerHTML = html;
     // container.style.height = '80px';
     log.error(err.stack);
